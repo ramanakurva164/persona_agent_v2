@@ -1,0 +1,68 @@
+[2025-11-03 16:45:53.941339] Ramana (frustrated user): I can’t log in again! It says invalid password even though it’s correct
+Bot: 💡 *Friendly Help:* I totally understand how that feels. **Slow Page Load / High Latency**
+
+**Summary:** Users report pages or dashboard loading slowly.
+
+**Recommended Steps:**
+1. Get user location, browser, and timestamp of slowness.
+2. Check CDN and app server latency metrics and recent scaling events.
+3. Suggest simple client fixes: clear cache, disable extensions, try incognito.
+4. If server-side, scale up workers or optimize queries; advise Engineering on hotspots.
+
+**Possible Causes:**
+- side, scale up workers or optimize queries; advise Engineering on hotspots.
+- Database slow queries, cache misses, overloaded app instances
+- Large client-side assets or third-party scripts
+We’ll fix this together!
+
+[2025-11-03 16:47:04.978839] Ramana (frustrated user): its so frustating that iam not able to login even if i enter the valid credentials
+Bot: 💡 *Friendly Help:* I totally understand how that feels. I couldn’t find relevant info — can you clarify the issue?
+We’ll fix this together!
+
+[2025-11-03 16:47:48.302035] Ramana (general user): what should i do now
+Bot: 🙂 *General Help:* I couldn’t find relevant info — can you clarify the issue?
+
+[2025-11-03 16:53:24.141215] Ramana (general user): I can’t log in again! It says invalid password even though it’s correct
+Bot: 🙂 *General Help:* **Slow Page Load / High Latency**
+
+**Summary:** Users report pages or dashboard loading slowly.
+
+**Recommended Steps:**
+1. Get user location, browser, and timestamp of slowness.
+2. Check CDN and app server latency metrics and recent scaling events.
+3. Suggest simple client fixes: clear cache, disable extensions, try incognito.
+4. If server-side, scale up workers or optimize queries; advise Engineering on hotspots.
+
+**Possible Causes:**
+- side, scale up workers or optimize queries; advise Engineering on hotspots.
+- Database slow queries, cache misses, overloaded app instances
+- Large client-side assets or third-party scripts
+
+[2025-11-03 16:53:45.950765] Ramana (general user): (User is following up on previous password_reset) what should i do now
+Bot: 🙂 *General Help:* I couldn’t find relevant info — can you clarify the issue?
+
+[2025-11-03 16:55:33.324081] Ramana (frustrated user): Payment Failed - Card Declined
+Bot: ⚠️ Your issue has been escalated to a human agent.
+**Agent:** Customer Support Lead
+
+[2025-11-03 16:55:52.674095] Ramana (general user): Login Failure - Invalid Credentials
+Bot: 🙂 *General Help:* **Login Failure - Invalid Credentials**
+
+**Summary:** Users cannot sign in — they receive an “invalid username or password” error.
+
+**Recommended Steps:**
+1. Ask user to confirm username/email and try password reset using the "Forgot password" link.
+2. If password reset fails, check whether the user's account is locked due to repeated failed attempts (unlock policy: 15 minutes).
+3. Verify account status in admin console (active, disabled, pending verification).
+4. If social login used (Google / Apple), confirm OAuth provider connectivity and tokens.
+
+**Possible Causes:**
+- Invalid Credentials
+- Wrong password or username
+- Account locked after multiple failed attempts
+- Social login token expired or OAuth misconfiguration
+- login
+
+[2025-11-03 16:56:09.829630] Ramana (general user): (User is following up on previous login_issue) what next
+Bot: 🙂 *General Help:* I couldn’t find relevant info — can you clarify the issue?
+

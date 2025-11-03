@@ -1,0 +1,102 @@
+---ARTICLE---
+Title: Login Failure - Invalid Credentials
+Summary: Users cannot sign in — they receive an “invalid username or password” error.
+Steps:
+1. Ask user to confirm username/email and try password reset using the "Forgot password" link.
+2. If password reset fails, check whether the user's account is locked due to repeated failed attempts (unlock policy: 15 minutes).
+3. Verify account status in admin console (active, disabled, pending verification).
+4. If social login used (Google / Apple), confirm OAuth provider connectivity and tokens.
+Possible causes:
+- Wrong password or username
+- Account locked after multiple failed attempts
+- Social login token expired or OAuth misconfiguration
+Tags: login, auth, password, social-login
+---ARTICLE---
+Title: Payment Failed - Card Declined
+Summary: Payment attempts return `card declined` or `payment failed`.
+Steps:
+1. Ask user to verify card details: number, expiry, CVV, billing address.
+2. Ask user to contact their bank or try another card.
+3. Check payment gateway dashboard (transaction logs) for decline codes and reason.
+4. If gateway shows 3D Secure challenge failed, instruct user to complete SCA prompts.
+5. If recurring billing, check stored token expiry and re-authorize.
+Possible causes:
+- Card expired, insufficient funds, bank blocks
+- Incorrect billing address
+- 3D Secure / SCA problem
+Tags: billing, payment, card, gateway
+---ARTICLE---
+Title: API Timeout or 504 Gateway Error
+Summary: Clients experience timeouts or 504 when invoking Adsparkx APIs.
+Steps:
+1. Check API status page and recent deployments for incidents.
+2. Ask for the following: endpoint called, request payload, response time, client region, and exact timestamp.
+3. Check server logs around timestamp for long-running queries or worker exhaustion.
+4. Confirm client retry/backoff policy; advise exponential backoff and jitter.
+5. If heavy query, offer batch processing or pagination to reduce payload.
+Possible causes:
+- Backend service outage or overloaded worker pool
+- Long-running database queries
+- Network connectivity / CDN edge issues
+Tags: api, timeout, performance, 504
+---ARTICLE---
+Title: Unexpected Charge / Billing Dispute
+Summary: Customer reports an unexpected charge and requests refund or clarification.
+Steps:
+1. Confirm transaction id, amount, date, and billing email/principal.
+2. Check billing/ledger for subscription cycles and prorated charges.
+3. If charge is valid and within policy, explain charge details and show invoice.
+4. If charge is erroneous, open refund request and escalate to Billing team with full logs.
+5. Provide expected time-to-refund (policy: 3–7 business days depending on payment provider).
+Possible causes:
+- Renewal / auto-renewal occurred
+- Multiple accounts with same card
+- Trial-to-paid conversion
+Tags: billing, refund, invoice, dispute
+---ARTICLE---
+Title: Feature Not Working After Update
+Summary: A feature stopped working for users after a recent product update.
+Steps:
+1. Ask for exact steps to reproduce, browser/OS version, and any console or server errors.
+2. Check recent release notes and deployment windows for breaking changes.
+3. Recreate issue in staging using the same data; if reproducible, create bug ticket (priority depends on impact).
+4. Provide user a temporary workaround if possible and keep them updated on ETA.
+Possible causes:
+- Regression from new release
+- Deprecated API or changed configuration
+Tags: regression, release, bug, feature
+---ARTICLE---
+Title: Slow Page Load / High Latency
+Summary: Users report pages or dashboard loading slowly.
+Steps:
+1. Get user location, browser, and timestamp of slowness.
+2. Check CDN and app server latency metrics and recent scaling events.
+3. Suggest simple client fixes: clear cache, disable extensions, try incognito.
+4. If server-side, scale up workers or optimize queries; advise Engineering on hotspots.
+Possible causes:
+- Database slow queries, cache misses, overloaded app instances
+- Large client-side assets or third-party scripts
+Tags: performance, latency, frontend, backend
+---ARTICLE---
+Title: Integration with Third-Party Ads Provider (Webhook failures)
+Summary: Webhooks to an ad provider are failing or not delivering.
+Steps:
+1. Confirm webhook URL, authentication method (HMAC / token), and response codes returned.
+2. Check provider dashboard for delivery logs and retry behavior.
+3. Verify our webhook logs for error details and payload size.
+4. Ask client to confirm that the webhook endpoint is reachable and not rate-limited by firewall.
+Possible causes:
+- Network restrictions, dropped connections, invalid signature
+- Rate limiting at provider
+Tags: integration, webhook, delivery, third-party
+---ARTICLE---
+Title: Account Cancellation and Data Retention
+Summary: User requests account cancellation and data deletion.
+Steps:
+1. Verify account ownership; request confirmation from the account email.
+2. Explain cancellation policy and data retention timeline.
+3. Create deletion request in compliance with policy; obtain approvals if required.
+4. Provide confirmation and expected completion datetime (e.g., 7 business days).
+Possible causes:
+- User intent to leave, compliance requests
+Tags: account, cancellation, privacy, gdpr
