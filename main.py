@@ -10,7 +10,6 @@ from ai_agent import get_ai_response
 st.set_page_config(page_title="AdSparkX Support Agent", page_icon="🤖", layout="centered")
 
 st.title("🤖 AdSparkX Customer Support Agent")
-st.caption("Powered by AI | Context-aware | Multi-persona support")
 
 # Load Knowledge Base
 kb = load_kb()
@@ -211,15 +210,8 @@ for i, chat in enumerate(st.session_state.chat_history):
 
 # Sidebar with conversation stats
 with st.sidebar:
-    st.header("📊 Conversation Stats")
+    
     if st.session_state.chat_history:
-        st.metric("Messages Exchanged", len(st.session_state.chat_history))
-        
-        personas = [chat['persona'] for chat in st.session_state.chat_history]
-        st.metric("Detected Persona", personas[-1] if personas else "N/A")
-        
-        intents = [chat.get('intent', 'unknown') for chat in st.session_state.chat_history]
-        st.metric("Current Intent", intents[-1] if intents else "N/A")
         
         if st.button("🔄 Clear Conversation"):
             st.session_state.chat_history = []
@@ -227,8 +219,6 @@ with st.sidebar:
             st.session_state.show_examples = True
             st.rerun()
     
-    else:
-        st.info("Start a conversation to see stats")
     
     st.markdown("---")
     st.markdown("### 🆘 Need Help?")
@@ -237,7 +227,7 @@ with st.sidebar:
     - Be specific about your issue
     - Include error messages if any
     - Mention what you've already tried
-    - Ask follow-up questions anytime
+    - Ask follow-up questions 
     """)
     
     st.markdown("---")
