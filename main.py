@@ -6,6 +6,20 @@ from escalator import check_escalation, escalate_to_human
 from utils import log_interaction
 from intent_detector import detect_intent
 from ai_agent import get_ai_response
+from gtts import gTTS
+import os
+from playsound import playsound
+
+def speak_text(text: str):
+    """Convert text to speech and play it."""
+    try:
+        tts = gTTS(text=text, lang='en')
+        filename = "response.mp3"
+        tts.save(filename)
+        playsound(filename)
+        os.remove(filename)
+    except Exception as e:
+        print(f"TTS Error: {e}")
 
 st.set_page_config(page_title="AdSparkX Support Agent", page_icon="🤖", layout="centered")
 
@@ -193,6 +207,7 @@ for i, chat in enumerate(st.session_state.chat_history):
     
     with st.chat_message("assistant"):
         st.markdown(chat["reply"])
+        speak_text(chat["reply"])
         
         # Show intent badge
         if chat.get('intent'):
