@@ -1,0 +1,4 @@
+🧩 Problem Statement: Persona-Adaptive Customer Support Agent
+
+Objective:
+Build an intelligent customer support agent that can automatically detect the user’s persona (e.g., technical expert, frustrated user, business executive), retrieve relevant information from existing knowledge base (KB) documents, adapt its response tone accordingly, and escalate complex or unresolved issues to a human-like AI agent (Gemini model) while maintaining full conversation context.
