@@ -1,217 +1,303 @@
-# persona_agent_v2
+# 🤖 AdSparkX Customer Support Agent
 
-persona_agent_v2 is a Python project that implements an extensible "persona" agent framework. The agent is designed to simulate or manage conversational personas — customizable behavioral profiles, knowledge, and response patterns — and to make it easy to build, run, and extend persona-driven bots or assistants for research, prototyping, or production usage.
+An intelligent, multi-persona customer support chatbot that adapts responses based on user type and conversation context. Built with Streamlit, HuggingFace, and Google Gemini AI.
 
-This README explains the project's purpose, architecture, installation, usage, configuration, and contribution guidance.
+![Python](https://img.shields.io/badge/python-3.8+-blue.svg)
+![Streamlit](https://img.shields.io/badge/streamlit-1.28+-red.svg)
+![License](https://img.shields.io/badge/license-MIT-green.svg)
 
----
+## 📋 Table of Contents
 
-## Table of Contents
-
-- [Project Overview](#project-overview)
+- [Overview](#overview)
 - [Key Features](#key-features)
 - [Architecture](#architecture)
-- [Getting Started](#getting-started)
-  - [Requirements](#requirements)
-  - [Installation](#installation)
-  - [Configuration](#configuration)
+- [Installation](#installation)
+- [Configuration](#configuration)
 - [Usage](#usage)
-  - [Running the Agent](#running-the-agent)
-  - [Creating / Customizing Personas](#creating--customizing-personas)
-- [Development](#development)
-  - [Testing](#testing)
-  - [Linting & Formatting](#linting--formatting)
-- [Examples](#examples)
-- [Roadmap](#roadmap)
+- [Project Structure](#project-structure)
+- [How It Works](#how-it-works)
+- [Technologies Used](#technologies-used)
 - [Contributing](#contributing)
 - [License](#license)
-- [Contact](#contact)
 
----
+## 🎯 Overview
 
-## Project Overview
+AdSparkX Support Agent is an AI-powered customer support system that provides personalized assistance by:
+- **Detecting user personas** (Technical Expert, Frustrated User, Business Executive, General User)
+- **Classifying intent** (Login issues, API errors, billing disputes, etc.)
+- **Searching knowledge base** for instant answers
+- **Using AI agents** when KB doesn't have answers
+- **Escalating to humans** when issues are complex or urgent
 
-A "persona agent" encapsulates a specific personality, background, and response behavior so that the same underlying conversational engine can produce different styles of interaction depending on which persona is active. persona_agent_v2 provides:
+## ✨ Key Features
 
-- A core agent runtime to process inputs and generate outputs.
-- A persona abstraction to define identity, tone, memory, and response rules.
-- Hooks/extensions for integrating LLMs, rules engines, or external tools.
-- Utilities for loading, persisting, and switching personas.
+### 🎭 Multi-Persona Support
+Adapts communication style based on customer type:
+- **Technical Expert**: Precise, technical language with code examples
+- **Frustrated User**: Empathetic, apologetic, solution-focused
+- **Business Executive**: Professional, ROI-focused, business impact
+- **General User**: Friendly, clear, jargon-free
 
-The v2 branch focuses on modularity, clearer persona configuration, and easier testing.
+### 🧠 Context-Aware Conversations
+- Maintains conversation history throughout the session
+- Uses context for better persona/intent detection
+- Generates coherent multi-turn responses
+- Remembers previous issues for follow-up questions
 
----
+### 📚 Three-Tier Response System
+1. **Knowledge Base Search** - Instant answers from structured KB
+2. **AI Agent (Gemini)** - Generates responses when KB doesn't have answers
+3. **Human Escalation** - Routes complex issues to appropriate teams
 
-## Key Features
+### 🚨 Smart Escalation Logic
+Automatically escalates when:
+- Legal or regulatory threats detected
+- Frustrated user with repeated issues
+- High-value business matters
+- User explicitly requests human agent
 
-- Persona definitions: declarative persona profiles (metadata, tone, skills).
-- Memory primitives: short-term and long-term memory stubs for persona state.
-- Pluggable response backends: easily integrate local/remote LLMs, templates, or rule-based responders.
-- Configuration-driven: define personas and agent behavior using YAML/JSON files.
-- Testable: utilities for unit-testing persona behavior without external services.
+## 🏗️ Architecture
 
----
-
-## Architecture
-
-- agent/
-  - core agent runtime and message routing
-- personas/
-  - persona definition loaders and serializers
-- backends/
-  - connectors for LLMs, template engines, or custom responders
-- memory/
-  - in-memory and pluggable storage abstractions
-- utils/
-  - helpers, logging, and configuration utilities
-- examples/
-  - sample personas and quick-start scripts
-
-The core runtime accepts input (text/event), consults the active persona and memory, invokes a responder backend, and returns a persona-consistent output.
-
----
-
-## Getting Started
-
-### Requirements
-
-- Python 3.8+
-- Recommended: virtualenv or venv for environment isolation
-- (Optional) API keys for LLM backends if you plan to connect to external services
-
-### Installation
-
-1. Clone the repository:
-   git clone https://github.com/ramanakurva164/persona_agent_v2.git
-2. Enter the project directory:
-   cd persona_agent_v2
-3. Create and activate a virtual environment:
-   python -m venv .venv
-   source .venv/bin/activate   # macOS/Linux
-   .venv\Scripts\activate      # Windows
-4. Install dependencies:
-   pip install -r requirements.txt
-   (If there is no requirements file yet, install only what you need for your chosen backend.)
-
-### Configuration
-
-- Persona files: store persona definitions under `personas/` as YAML or JSON.
-- Agent config: provide a central `config.yml` or `config.json` describing which backend to use, logging, and memory options.
-- Environment variables: use env vars to pass secret keys or runtime flags (e.g., LLM_API_KEY).
-
----
-
-## Usage
-
-### Running the Agent
-
-A minimal pattern to run the agent (example script):
-
-python run_agent.py --persona personas/default.yaml
-
-Where `run_agent.py`:
-- loads the configuration,
-- instantiates the agent runtime,
-- loads the requested persona,
-- starts the interactive loop (or listens on an API/socket).
-
-(If an `examples/` or `scripts/` folder exists, run the included quick-start script.)
-
-### Creating / Customizing Personas
-
-A persona definition typically includes:
-
-- id: unique identifier
-- name: display name
-- description: short bio or role
-- tone: friendly / formal / humorous / terse
-- knowledge: static facts or profile data
-- behavior_rules: optional prioritized rules or templates
-- memory_settings: how memory should be used (short-term window, long-term persistence)
-
-Example (YAML):
-
-```yaml
-id: "friendly_helper"
-name: "Friendly Helper"
-description: "A polite, helpful assistant who explains things clearly."
-tone: "friendly"
-knowledge:
-  - "I help users with developer tasks and explanations."
-memory_settings:
-  short_term: 5
-  persist: false
+```
+User Input
+    ↓
+Persona Detection (HuggingFace)
+    ↓
+Intent Classification (HuggingFace)
+    ↓
+Context Update
+    ↓
+Should Escalate?
+    ├── YES → Human Agent Assignment
+    └── NO → KB Search
+              ├── Found → Adapt Tone → Response
+              └── Not Found → AI Agent (Gemini) → Adapt Tone → Response
 ```
 
-Load this persona with the agent using the CLI or API.
+## 🚀 Installation
+
+### Prerequisites
+- Python 3.8+
+- pip
+- Git
+
+### Steps
+
+1. **Clone the repository**
+```bash
+git clone https://github.com/ramanakurva164/persona_agent.git
+cd persona_agent
+```
+
+2. **Create virtual environment**
+```bash
+python -m venv personaenv
+```
+
+3. **Activate virtual environment**
+```bash
+# Windows
+personaenv\Scripts\activate
+
+# Linux/Mac
+source personaenv/bin/activate
+```
+
+4. **Install dependencies**
+```bash
+pip install -r requirements.txt
+```
+
+## ⚙️ Configuration
+
+### 1. Create `.env` file
+
+Create a `.env` file in the root directory:
+
+```plaintext
+# Google Gemini API Key
+GEMINI_API_KEY=your_gemini_api_key_here
+
+# HuggingFace Token (optional - for premium models)
+HF_TOKEN=your_huggingface_token_here
+```
+
+### 2. Get API Keys
+
+**Gemini API Key:**
+1. Go to [Google AI Studio](https://makersuite.google.com/app/apikey)
+2. Create a new API key
+3. Copy and paste into `.env`
+
+**HuggingFace Token (Optional):**
+1. Go to [HuggingFace Settings](https://huggingface.co/settings/tokens)
+2. Create a new token
+3. Copy and paste into `.env`
+
+### 3. Customize Knowledge Base
+
+Edit [`adsparkx_kb.txt`](adsparkx_kb.txt ) to add your own support articles:
+
+```plaintext
+---ARTICLE---
+Title: Your Article Title
+Summary: Brief description of the issue
+Steps:
+1. First step to resolve
+2. Second step to resolve
+3. Third step to resolve
+Possible causes:
+- Cause one
+- Cause two
+Tags: keyword1, keyword2, keyword3
+```
+
+## 🎮 Usage
+
+### Run the Application
+
+```bash
+streamlit run main.py
+```
+
+The app will open in your browser at `http://localhost:8501`
+
+### Using the Chat Interface
+
+1. **Enter your name** in the input field
+2. **Ask your question** in the chat input
+3. **View the response** with adapted tone and relevant information
+4. **Continue the conversation** - the agent remembers context
+
+### Example Interactions
+
+**Technical Expert:**
+```
+User: "Our API integration is throwing 504 errors on /v1/campaigns endpoint"
+Agent: "Root cause analysis: Gateway timeout indicates backend service overload. 
+        Execute diagnostic: curl -v https://api.adsparkx.com/health..."
+```
+
+**Frustrated User:**
+```
+User: "I can't login and I need access NOW!"
+Agent: "I'm really sorry for the trouble! 😔 Let's get you back in right away:
+        1. Click 'Forgot Password' on the login page..."
+```
+
+**Business Executive:**
+```
+User: "What's your enterprise pricing?"
+Agent: "Our Enterprise tier offers custom SLA with dedicated support. 
+        Pricing scales with volume: 10K-50K events/month..."
+```
+
+## 📁 Project Structure
+
+```
+persona_agent/
+├── main.py                    # Main Streamlit application
+├── persona_detector.py        # Persona detection (HuggingFace)
+├── intent_detector.py         # Intent classification (HuggingFace)
+├── kb_manager.py              # Knowledge base loader & retrieval
+├── ai_agent.py                # Gemini AI response generation
+├── escalator.py               # Human escalation logic
+├── responder.py               # Tone adaptation based on persona
+├── utils.py                   # Logging utilities
+├── adsparkx_kb.txt            # Knowledge base articles
+├── requirements.txt           # Python dependencies
+├── .env                       # API keys (not in git)
+├── .gitignore                 # Git ignore rules
+└── README.md                  # This file
+```
+
+## 🔧 How It Works
+
+### 1. Persona Detection
+Uses HuggingFace's `zephyr-7b-beta` model to classify users into:
+- Technical Expert
+- Frustrated User
+- Business Executive
+- General User
+
+Fallback: Keyword-based classification
+
+### 2. Intent Classification
+Classifies user queries into:
+- `login_issue`
+- `payment_issue`
+- `api_error`
+- `billing_dispute`
+- `feature_request`
+- `performance_issue`
+- `integration_issue`
+- `general_query`
+
+### 3. Knowledge Base Retrieval
+- Parses structured KB articles
+- Calculates similarity scores using `difflib`
+- Boosts score if intent matches article tags
+- Returns best match if confidence > 0.25
+
+### 4. AI Agent Response
+When KB doesn't have an answer:
+- Builds context from last 5 conversations
+- Sends to Google Gemini (`gemini-2.0-flash-exp`)
+- Generates contextual, persona-aware response
+
+### 5. Tone Adaptation
+Transforms responses based on persona:
+- **Technical**: Precise, technical terminology
+- **Frustrated**: Empathetic, apologetic
+- **Executive**: Professional, business-focused
+- **General**: Friendly, simple language
+
+### 6. Escalation Logic
+Routes to human agents based on:
+- Urgency keywords (legal, lawsuit)
+- Repeated issues by frustrated users
+- High-value business matters
+- Explicit escalation requests
+
+## 🛠️ Technologies Used
+
+- **[Streamlit](https://streamlit.io/)** - Web interface
+- **[HuggingFace Inference API](https://huggingface.co/)** - Persona & intent detection
+- **[Google Gemini AI](https://ai.google.dev/)** - AI response generation
+- **[Python-dotenv](https://pypi.org/project/python-dotenv/)** - Environment variable management
+- **difflib** - Text similarity matching
+- **re** - Regular expressions for KB parsing
+
+## 🤝 Contributing
+
+Contributions are welcome! Please follow these steps:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 👥 Authors
+
+- **Venkata Ramana** - [GitHub](https://github.com/ramanakurva164)
+
+## 🙏 Acknowledgments
+
+- HuggingFace for inference API
+- Google for Gemini AI
+- Streamlit for the amazing framework
+
+## 📞 Support
+
+For questions or issues:
+- **Email**: support@adsparkx.com
+- **Issues**: [GitHub Issues](https://github.com/ramanakurva164/persona_agent/issues)
 
 ---
 
-## Development
-
-- Code style: follow common Python conventions (PEP 8). Use tools like flake8/black if configured.
-- Tests: add unit tests for persona logic and memory behavior in a tests/ directory.
-
-### Testing
-
-To run tests (if pytest is configured):
-
-pytest
-
-### Linting & Formatting
-
-If configured:
-
-- Black: black .
-- Flake8: flake8 .
-
----
-
-## Examples
-
-- examples/interactive_demo.py — run a terminal interactive session with a sample persona.
-- examples/custom_backend_demo.py — demonstrate plugging a custom responder backend.
-
-(If examples are not present, use the skeleton scripts to create them.)
-
----
-
-## Roadmap
-
-Planned improvements:
-
-- Persistent memory backends (SQLite, Redis).
-- Built-in connectors for popular LLM APIs.
-- WebSocket / HTTP API wrapper for multi-user scenarios.
-- Persona versioning and experiment tracking.
-
----
-
-## Contributing
-
-Contributions are welcome. Suggested workflow:
-
-1. Fork the repository.
-2. Create a feature branch: git checkout -b feat/your-feature
-3. Add tests for new behavior.
-4. Open a pull request describing the change and motivation.
-
-Please follow repository guidelines and code style.
-
----
-
-## License
-
-Specify a license for the project (e.g., MIT, Apache-2.0). If no license file exists, add one to clarify usage.
-
----
-
-## Contact
-
-Maintainer: ramanakurva164
-
-For questions or help, open an issue in this repository: https://github.com/ramanakurva164/persona_agent_v2/issues
-
----
-
-Thank you for using persona_agent_v2 — a simple, extensible foundation for building persona-driven conversational agents.
+⭐ **Star this repo** if you find it helpful!
