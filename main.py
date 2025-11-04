@@ -8,18 +8,28 @@ from intent_detector import detect_intent
 from ai_agent import get_ai_response
 from gtts import gTTS
 import os
-from playsound import playsound
+import tempfile
 
 def speak_text(text: str):
-    """Convert text to speech and play it."""
+    """Convert assistant reply to speech. Works on both local & Streamlit Cloud."""
     try:
         tts = gTTS(text=text, lang='en')
-        filename = "response.mp3"
-        tts.save(filename)
-        playsound(filename)
-        os.remove(filename)
+
+        # Create a temporary MP3 file
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as tmp_file:
+            tts.save(tmp_file.name)
+
+            # If running locally (not in Streamlit Cloud)
+            if os.environ.get("STREAMLIT_RUNTIME") is None:
+                from playsound import playsound
+                playsound(tmp_file.name)
+                os.remove(tmp_file.name)
+            else:
+                # Streamlit Cloud (browser-based)
+                st.audio(tmp_file.name, format="audio/mp3")
+
     except Exception as e:
-        print(f"TTS Error: {e}")
+        st.warning(f"TTS Error: {e}")
 
 st.set_page_config(page_title="AdSparkX Support Agent", page_icon="🤖", layout="centered")
 
