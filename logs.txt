@@ -66,3 +66,19 @@ Bot: 🙂 *General Help:* **Login Failure - Invalid Credentials**
 [2025-11-03 16:56:09.829630] Ramana (general user): (User is following up on previous login_issue) what next
 Bot: 🙂 *General Help:* I couldn’t find relevant info — can you clarify the issue?
 
+[2025-11-04 11:02:51.212020] ajay (general user): invalid login credentials
+Bot: 🙂  Okay, I understand you're having trouble logging in and are getting an "invalid login credentials" message. That can be frustrating!
+
+First, double-check that you're using the correct email address and password. It's easy to mistype something. Passwords are case-sensitive too!
+
+If you're still having trouble, you can try resetting your password by clicking the "Forgot Password" link on the login page. You'll receive an email with instructions on how to create a new one.
+
+Are you still unable to log in after trying these steps?
+
+[2025-11-04 11:03:36.302826] ajay (general user): yes still iam unable to login
+Bot: 🙂  Okay, I'm sorry to hear you're still unable to log in even after trying those steps. Let's try a couple more things.
+
+Sometimes browser issues can interfere with login. Could you please try logging in using a different web browser (like Chrome, Firefox, Safari, or Edge) or using a private/incognito window? Also, clearing your browser's cache and cookies can sometimes help.
+
+If you're still locked out after trying that, I can connect you with our technical support team who can investigate your account further. Would you like me to do that?
+
