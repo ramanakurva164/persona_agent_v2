@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-client = InferenceClient(token=os.getenv("HF_TOKEN"))
+client = InferenceClient(token=st.secrets["HF_TOKEN"])
 
 def detect_intent(message: str, conversation_history: list = None) -> str:
     """
