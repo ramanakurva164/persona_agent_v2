@@ -9,7 +9,8 @@ def check_escalation(persona: str, message: str, intent: str, conversation_histo
     Determine if issue should be escalated to human agent.
     """
     message_lower = message.lower()
-    
+    if any(keyword in message_lower for keyword in ESCALATION_KEYWORDS):
+        return True
     # Immediate escalation keywords
     urgent_keywords = ["legal", "lawsuit", "attorney", "lawyer", "sue", "complaint", "regulatory"]
     if any(keyword in message_lower for keyword in urgent_keywords):
