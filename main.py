@@ -44,9 +44,17 @@ if "show_examples" not in st.session_state:
     st.session_state.show_examples = True
 
 # User name input (always visible)
-user_name = st.text_input("👤 Enter your name", value=st.session_state.user_name, key="name_input")
-if user_name:
-    st.session_state.user_name = user_name
+if "user_name" not in st.session_state:
+    st.session_state.user_name = ""
+
+# Show input box **only if name not entered yet**
+if not st.session_state.user_name:
+    user_name = st.text_input("👤 Enter your name", key="name_input")
+    if user_name:
+        st.session_state.user_name = user_name
+        st.rerun()  # Rerun the app to hide the input after entering the name
+else:
+    st.success(f"Welcome, {st.session_state.user_name}! 👋")
 
 # Show example questions when no chat history exists
 if st.session_state.show_examples and not st.session_state.chat_history:
