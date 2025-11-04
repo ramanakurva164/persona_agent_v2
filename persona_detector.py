@@ -1,40 +1,73 @@
 import os
-import google.generativeai as genai
+from huggingface_hub import InferenceClient
 from dotenv import load_dotenv
 
 load_dotenv()
-genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
-model = genai.GenerativeModel("gemini-2.0-flash-lite")
+# Initialize HuggingFace Inference Client
+client = InferenceClient(token=os.getenv("HF_TOKEN"))
 
-def detect_persona(message: str) -> str:
+def detect_persona(message: str, conversation_history: list = None) -> str:
     """
-    Detects customer persona using Gemini or fallback.
+    Detects customer persona using HuggingFace model with conversation context.
     """
     try:
-        prompt = f"""
-        You are a smart classifier that identifies the persona of a customer based on their message.
-        Possible personas:
-        1. Technical Expert – uses technical terms, APIs, code, integrations.
-        2. Frustrated User – expresses anger, confusion, dissatisfaction.
-        3. Business Executive – asks about pricing, plans, reports, enterprise solutions.
-        4. General User – casual query.
-        Message: "{message}"
-        Return only persona name.
-        """
-        response = model.generate_content(prompt)
-        persona = response.text.strip().lower()
-        if not persona:
-            raise ValueError("Empty response")
-        return persona
-    except Exception:
-        # Fallback
-        message = message.lower()
-        if any(word in message for word in ["api", "developer", "code", "integration", "token"]):
-            return "technical expert"
-        elif any(word in message for word in ["angry", "frustrated", "not working", "crash", "disappointed"]):
-            return "frustrated user"
-        elif any(word in message for word in ["pricing", "plan", "business", "report", "enterprise"]):
-            return "business executive"
-        else:
-            return "general user"
+        # Build context from conversation history
+        context = ""
+        if conversation_history:
+            context = "Previous conversation:\n"
+            for chat in conversation_history[-3:]:  # Last 3 exchanges
+                context += f"User: {chat['message']}\n"
+                context += f"Assistant: {chat['reply'][:100]}...\n"
+        
+        prompt = f"""{context}
+
+Current message: "{message}"
+
+You are a smart classifier that identifies the persona of a customer based on their message and conversation history.
+Possible personas:
+1. Technical Expert – uses technical terms, APIs, code, integrations, debugging language
+2. Frustrated User – expresses anger, confusion, dissatisfaction, urgency
+3. Business Executive – asks about pricing, plans, reports, enterprise solutions, ROI
+4. General User – casual query, basic questions
+
+Analyze the current message and conversation context. Return ONLY ONE of these exact labels:
+- technical expert
+- frustrated user
+- business executive
+- general user"""
+
+        response = client.text_generation(
+            prompt,
+            model="mistralai/Mixtral-8x7B-Instruct-v0.1",
+            max_new_tokens=20,
+            temperature=0.3
+        )
+        
+        persona = response.strip().lower()
+        
+        # Validate response
+        valid_personas = ["technical expert", "frustrated user", "business executive", "general user"]
+        for valid in valid_personas:
+            if valid in persona:
+                return valid
+        
+        return fallback_persona_detection(message)
+        
+    except Exception as e:
+        print(f"Persona detection error: {e}")
+        return fallback_persona_detection(message)
+
+
+def fallback_persona_detection(message: str) -> str:
+    """Fallback keyword-based persona detection."""
+    message_lower = message.lower()
+    
+    if any(word in message_lower for word in ["api", "code", "integration", "sdk", "error", "bug", "technical", "debug", "webhook", "token"]):
+        return "technical expert"
+    elif any(word in message_lower for word in ["angry", "frustrated", "terrible", "worst", "disappointed", "hate", "urgent", "immediately"]):
+        return "frustrated user"
+    elif any(word in message_lower for word in ["pricing", "plan", "enterprise", "business", "roi", "cost", "invoice", "billing"]):
+        return "business executive"
+    else:
+        return "general user"
