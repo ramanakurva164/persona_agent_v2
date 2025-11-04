@@ -7,4 +7,3 @@ google-generativeai
 python-dotenv
 huggingface-hub
 gTTS 
-playsound
