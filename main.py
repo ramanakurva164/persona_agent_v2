@@ -18,15 +18,7 @@ def speak_text(text: str):
         # Create a temporary MP3 file
         with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as tmp_file:
             tts.save(tmp_file.name)
-
-            # If running locally (not in Streamlit Cloud)
-            if os.environ.get("STREAMLIT_RUNTIME") is None:
-                from playsound import playsound
-                playsound(tmp_file.name)
-                os.remove(tmp_file.name)
-            else:
-                # Streamlit Cloud (browser-based)
-                st.audio(tmp_file.name, format="audio/mp3")
+            st.audio(tmp_file.name, format="audio/mp3")
 
     except Exception as e:
         st.warning(f"TTS Error: {e}")
