@@ -214,7 +214,7 @@ persona_agent/
 ## 🔧 How It Works
 
 ### 1. Persona Detection
-Uses HuggingFace's `zephyr-7b-beta` model to classify users into:
+Uses HuggingFace's `Mistral` model to classify users into:
 - Technical Expert
 - Frustrated User
 - Business Executive
